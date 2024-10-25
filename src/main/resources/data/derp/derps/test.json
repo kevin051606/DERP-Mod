@@ -1,0 +1,14 @@
+{
+    "Type":"Derp",
+
+    "Id":"sss",
+    "DisplayName":"",
+    "Description":"",
+    "Layer":"layer name",
+    "UiBackground":"textures/block/crying_obsidian.png",
+    "UiColor":[0.6,0.4,0.5,1],
+    "FontColor":[0.6,0.4,0.5,1],
+    "Skills":[ ]
+
+}
+    

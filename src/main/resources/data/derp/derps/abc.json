@@ -1,0 +1,35 @@
+{
+    "Type":"Derp",
+    "Id":"ssssds",
+    "DisplayName":"",
+    "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions",
+    "Layer":"Defaults",
+    "UiBackground":"textures/block/dirt.png",
+    "UiColor":[0.6,0.4,0.5,1],
+    "FontColor":[0.3,0.2,0.25,1],
+    "Skills":[ 
+        {
+            "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions",
+            "Panel":0,
+            "X":0,
+            "Y":0,
+            "SkillActions":[],
+            "Requirements":[]
+        },
+        {
+            "Panel":0,
+            "X":4,
+            "Y":1,
+            "SkillActions":[],
+            "Requirements":[]
+        },
+        {
+            "Panel":0,
+            "X":0,
+            "Y":5,
+            "SkillActions":[],
+            "Requirements":[]
+        }
+    ]
+}
+    
