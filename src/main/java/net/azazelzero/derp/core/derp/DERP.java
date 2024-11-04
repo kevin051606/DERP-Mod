@@ -17,6 +17,8 @@ public class DERP implements Serializable {
     public String Texture="textures/block/dirt.png";
     public Float[] Color= {1.0f,1.0f,1.0f,1.0f};
     public Float[] FontColor = new Float[]{1.0F, 1.0F, 1.0F, 1.0F};
+    public Float[] SkillUnlockedColor = new Float[]{1.0F, 1.0F, 1.0F, 1.0F};
+    public Float[] SkillLockedColor = new Float[]{0.5F, 0.5F, .5F, .5F};
     public List<String> issue = null;
     public DERP(){
         DATs=new DAT[8][5][6];

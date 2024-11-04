@@ -5,9 +5,12 @@ buildscript {
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
         jcenter() // buildscript repo to get shadow from
+        maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
     }
 
 }
@@ -155,8 +158,9 @@ repositories {
      flatDir {
          dirs './libs'
      }
-
-
+    maven {
+        url = "https://jitpack.io"
+    }
 
 }
 configurations {
@@ -176,6 +180,9 @@ dependencies {
 //    implementation files('luaCore.jar')
 //    implementation files('luaj-jme-3.0.2.jar')
     implementation 'org.luaj:luaj-jse-3.0.2'
+    implementation fg.deobf("com.github.Virtuoel:Pehkui:${pehkui_version}")
+//    implementation 'net.fabricmc.fabric-api:fabric-api:0.77.0+1.18.2'
+
 //    // https://mvnrepository.com/artifact/org.luaj/luaj-jse
 //    shadow 'junit:junit:3.8.2'
 //    shadow 'luaj:luaj-jse:3.0.2'
@@ -254,3 +261,4 @@ publishing {
 
 tasks.build.dependsOn reobf
 jar.finalizedBy("shadowJar")
+apply plugin: "org.spongepowered.mixin"

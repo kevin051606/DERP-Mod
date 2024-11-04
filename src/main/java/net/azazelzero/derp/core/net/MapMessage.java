@@ -3,12 +3,15 @@ package net.azazelzero.derp.core.net;
 import net.azazelzero.derp.client.event.ClientForgeEvents;
 import net.azazelzero.derp.client.gui.SelectDerp;
 import net.azazelzero.derp.core.derp.DERP;
+import net.azazelzero.derp.core.derp.skillactions.SkillActionEntry;
 import net.azazelzero.derp.core.event.ModForgeEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -75,7 +78,6 @@ public class MapMessage {
         new AtomicBoolean(false);
         ((NetworkEvent.Context)ctx.get()).enqueueWork(() -> {
             System.out.println("name of before" + this.msg.type.name());
-            if (this.msg.type == net.azazelzero.derp.core.net.Packet.PacketType.SelectingDerp) {
                 ModForgeEvents.derpsLoaded.clear();
                 System.out.println(this.msg.derpSync.isEmpty());
                 ModForgeEvents.derpsLoaded.putAll(this.msg.derpSync);
@@ -92,7 +94,7 @@ public class MapMessage {
                     });
                 });
                 System.out.println("name of derps has been ran");
-            }
+
 
             DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> {
                 return handlePacket(this.msg, ctx);
@@ -104,9 +106,13 @@ public class MapMessage {
     public static DistExecutor.SafeRunnable handlePacket(Packet msg, Supplier<NetworkEvent.Context> ctx) {
         return new DistExecutor.SafeRunnable() {
             public void run() {
-                if(ClientForgeEvents.ClientPlayerData==null) ClientForgeEvents.ClientPlayerData=new ArrayList<>();
+
                 ClientForgeEvents.ClientPlayerData.clear();
                 if(msg.type!= Packet.PacketType.SelectingDerp) return;
+                DeferredRegister.create(new ResourceLocation("derp", "skillactions"),"derp").getEntries().forEach(b->{
+                    SkillActionEntry val = (SkillActionEntry) b.get();
+                    val.skillAction().onRemove(Minecraft.getInstance().player.getName().getString());
+                });
                 List<Integer> pain = new ArrayList<>();
                 pain.add(0);
                 pain.add(0);

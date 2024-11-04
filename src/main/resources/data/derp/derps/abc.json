@@ -4,29 +4,57 @@
     "DisplayName":"",
     "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions",
     "Layer":"Defaults",
-    "UiBackground":"textures/block/dirt.png",
+    "UiBackground":"textures/block/obsidian.png",
     "UiColor":[0.6,0.4,0.5,1],
     "FontColor":[0.3,0.2,0.25,1],
-    "Skills":[ 
+    "SkillUnlockedColor":[0.6,0.4,0.5,1],
+    "SkillLockedColor":[0.3,0.2,0.25,1],
+    "Skills":[
         {
             "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions",
             "Panel":0,
             "X":0,
+
             "Y":0,
+            "Id": "fpaintwo",
             "SkillActions":[],
-            "Requirements":[]
+            "Requirements":[
+                {
+                    "RequirementType": "derp:statistics",
+                    "value": 400,
+                    "name": "jump",
+                    "displayName": "jumps"
+                }
+            ]
         },
         {
             "Panel":0,
             "X":4,
             "Y":1,
-            "SkillActions":[],
-            "Requirements":[]
+            "Id": "ffpain",
+            "SkillActions":[
+                {
+                    "SkillType": "derp:scale",
+                    "scale_type": "jump_height",
+                    "operation":"multiply",
+                    "value": 2
+                }
+            ],
+            "Requirements":[
+                {
+                    "RequirementType": "derp:statistics",
+                    "value": 10,
+                    "example": "sss",
+                    "name": "jump",
+                    "displayName": "jumps"
+                }
+            ]
         },
         {
             "Panel":0,
             "X":0,
             "Y":5,
+            "Id": "sspain",
             "SkillActions":[],
             "Requirements":[]
         }

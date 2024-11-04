@@ -3,6 +3,7 @@ package net.azazelzero.derp.core.derp.requirements;
 import net.azazelzero.derp.Main;
 import net.azazelzero.derp.core.derp.requirements.RequirementRegistryEntry;
 import net.azazelzero.derp.core.derp.requirements.Requirements;
+import net.azazelzero.derp.core.event.ModForgeEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.*;
@@ -30,10 +31,10 @@ public  class DatRequirementRegistry{
     static {
         REQUIREMENTS = DeferredRegister.create(location, "derp");
     }
-    public static boolean verify(RequirementRegistryEntry[] array, String playername){
-        boolean allTrue=false;
-        for (RequirementRegistryEntry requirementRegistryEntry : array) {
-            if(!allTrue) allTrue=requirementRegistryEntry.check(playername);
+    public static boolean verify(DatRequirement[] array, String playername){
+        boolean allTrue=true;
+        for (DatRequirement requirementRegistryEntry : array) {
+            if(allTrue) allTrue=requirementRegistryEntry.check(playername);
         }
         return allTrue;
     }

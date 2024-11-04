@@ -7,13 +7,13 @@ import java.util.List;
 public class DERPData implements Serializable {
 
     public List<String> SkillsUnlocked = new ArrayList<>();
-    public DERPData.DATPostion[] Slots=null;
+    public Slottable[] Slots=null;
     public String derpId;
     public String layerId;
     public DERPData(){}
 
 
-    public static class DATPostion{
+    public static class DATPostion implements Serializable{
 
         public final int Panel;
         public final int X;

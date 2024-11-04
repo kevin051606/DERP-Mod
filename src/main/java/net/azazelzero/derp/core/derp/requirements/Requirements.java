@@ -1,13 +1,18 @@
 package net.azazelzero.derp.core.derp.requirements;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.luaj.vm2.ast.Str;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Requirements{
 //    @Override
@@ -66,15 +71,53 @@ public class Requirements{
 //
 //        return returnValue.get();
 //    }
-    public static class Statistics extends net.azazelzero.derp.core.derp.requirements.RequirementRegistryEntry {
+    public static class Statistics extends DatRequirement{
         public Statistics(){}
-        @Override
-        public boolean check(String playerName) {
-            AtomicBoolean returnValue = new AtomicBoolean(false);
 
+    @Override
+    public void init() {
+        Objects.requireNonNull(Minecraft.getInstance().getConnection()).send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.REQUEST_STATS));
+    }
+
+    @Override
+    public String[] DescriptionString(String playerName) {
+        JsonObject Parameters = getParameters();
+
+
+        String[] s = new String[1];
+        if(!Parameters.has("value")) return s;
+        if(!Parameters.has("name")) return s;
+        if(!Parameters.has("displayName")) return s;
+        int StatisticValue = Parameters.get("value").getAsInt();
+        String StatisticName = Parameters.get("name").getAsString();
+        String DisplayName=Parameters.get("displayName").getAsString();
+
+        if (StatisticValue == -100) return s;
+        if (StatisticName == null) return s;
+
+        AtomicReference<String> returnString= new AtomicReference<>("");
+        Registry.CUSTOM_STAT.entrySet().forEach((k) -> {
+            //                        if(k.getValue().getPath().equals(StatisticName)) System.out.println(player.getStats().getValue(Stats.CUSTOM.get(k.getValue())));
+            if (k.getValue().getPath().equals(StatisticName)){
+                int statValue = Minecraft.getInstance().player.getStats().getValue(Stats.CUSTOM.get(k.getValue()));
+                returnString.set(DisplayName+": "+statValue + " / " + StatisticValue);
+
+            }
+
+        });
+        s[0]=returnString.get();
+        return s;
+    }
+
+    @Override
+        public boolean check(String playerName) {
+            JsonObject Parameters = getParameters();
+            AtomicBoolean returnValue = new AtomicBoolean(false);
 
             ServerPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(playerName);
             if (player == null) return false;
+            if(!Parameters.has("value")) return  false;
+            if(!Parameters.has("name")) return  false;
 
             int StatisticValue = Parameters.get("value").getAsInt();
             String StatisticName = Parameters.get("name").getAsString();
@@ -89,7 +132,8 @@ public class Requirements{
             return returnValue.get();
         }
     }
-    public static final RegistryObject<RequirementRegistryEntry> Statistics= DatRequirementRegistry.REQUIREMENTS.register("statistics", Requirements.Statistics::new);
+    public static final RegistryObject<RequirementRegistryEntry> Statistics=
+            DatRequirementRegistry.REQUIREMENTS.register("statistics", () -> new RequirementRegistryEntry(new Requirements.Statistics()));
 
 //    public static final DeferredRegister<RequirementRegistryEntry> Reqs = DeferredRegister.create(DatRequirementRegistry.REQUIREMENTS, Main.MODID);
 

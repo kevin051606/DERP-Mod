@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class DerpPlayerData{
-  private int val;
+  public int val =10;
   public ArrayList<DERPData[]> derps=null;
   public Slottable[] slots=null;
 
   public void copyFrom(DerpPlayerData source) {
     this.val = source.val;
+    this.derps = source.derps;
+    this.slots = source.slots;
   }
   public void saveNBTData(CompoundTag nbt){
       nbt.putInt("val",val);

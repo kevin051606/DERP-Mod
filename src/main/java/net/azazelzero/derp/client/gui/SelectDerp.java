@@ -98,10 +98,10 @@ public class SelectDerp extends Screen {
     @Override
     public void init(){
         super.init();
-        int i = (this.width - 252) / 2;
-        int j = (this.height - 140) / 2;
+        int i = (this.width - 132) / 2;
+        int j = (this.height - 185) / 2;
         System.out.println("kill me");
-        this.addWidget(new Button(125 ,103 ,13, 19, new TextComponent("ssddfd"), (b) -> {
+        this.addWidget(new Button((i-23),(j+75) ,13, 19, new TextComponent("ssddfd"), (b) -> {
             this.derpIndex = (Integer)this.variableCarryOver.get(0);
             this.variableCarryOver.set(0, (Integer)this.variableCarryOver.get(0) + 1);
             --this.derpIndex;
@@ -112,7 +112,7 @@ public class SelectDerp extends Screen {
             this.derpIndex = this.derpIndex;
             this.variableCarryOver.set(0, this.derpIndex);
         }));
-        this.addWidget(new Button(287 ,103, 13, 19, new TextComponent("ssddfd"), (b) -> {
+        this.addWidget(new Button((i+140),(j+75), 13, 19, new TextComponent("ssddfd"), (b) -> {
             this.derpIndex = (Integer)this.variableCarryOver.get(0);
             this.variableCarryOver.set(0, (Integer)this.variableCarryOver.get(0) + 1);
             ++this.derpIndex;
@@ -122,7 +122,7 @@ public class SelectDerp extends Screen {
 
             this.variableCarryOver.set(0, this.derpIndex);
         }));
-        this.addWidget(new Button(168 ,207, 257-168, 13, new TextComponent("ssddfd"), (b) -> {
+        this.addWidget(new Button(i+22,j+180, 257-168, 13, new TextComponent("ssddfd"), (b) -> {
             this.currentLayer=variableCarryOver.get(1);
             derpIndex=variableCarryOver.get(0);
             DERP[] newDerpSet=new DERP[3];
@@ -192,6 +192,10 @@ public class SelectDerp extends Screen {
                 if(derpIndex>ModForgeEvents.derpsLoaded.size()-1)derpIndex=0;
             }
         }
+        int i = (this.width - 252) / 2;
+        int j = (this.height - 140) / 2;
+        System.out.println((i-23)+" "+(j+75));
+
         System.out.println("x:"+mouseX+" y:"+mouseY);
         return super.mouseClicked(mouseX, mouseY, p_97345_);
     }
@@ -221,8 +225,11 @@ public class SelectDerp extends Screen {
         return result;
     }
     public void renderText(PoseStack matrices, int i, int j){
-        this.font.draw(matrices,derp().Description,i+16,j+30,4210752);
-        drawString(matrices, this.font, derp().displayName, i + 68, j + 25, colorToInt(derp().FontColor[0].intValue(), derp().FontColor[1].intValue(), derp().FontColor[2].intValue()));
+//        this.font.draw(matrices,derp().Description,i+16,j+30,4210752);
+        String displayName=derp().displayName;
+        if(displayName.length()>30)displayName=displayName.substring(0,30);
+        drawCenteredString(matrices, this.font, displayName,i + 19, j + 25,colorToInt(derp().FontColor[0].intValue(), derp().FontColor[1].intValue(), derp().FontColor[2].intValue()));
+//        drawString( i + 68, j + 25, colorToInt(derp().FontColor[0].intValue(), derp().FontColor[1].intValue(), derp().FontColor[2].intValue()));
         FormattedText s = FormattedText.of(derp().Description);
         this.font.drawWordWrap(FormattedText.of(derp().Description), i + 19, j + 40, 100, colorToInt(derp().FontColor[0].intValue(), derp().FontColor[1].intValue(), derp().FontColor[2].intValue()));
 

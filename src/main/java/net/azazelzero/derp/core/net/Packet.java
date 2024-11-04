@@ -1,9 +1,7 @@
 package net.azazelzero.derp.core.net;
 
 
-import net.azazelzero.derp.core.derp.DERP;
-import net.azazelzero.derp.core.derp.DERPData;
-import net.azazelzero.derp.core.derp.Slottable;
+import net.azazelzero.derp.core.derp.*;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,6 +19,8 @@ public class Packet implements Serializable {
     public static Map<String, Map<String, net.azazelzero.derp.core.derp.DERP>> derpSync;
     public String serverPlayer;
     public DERPData.DATPostion Pos;
+    public int SlottableIndex;
+    public DAT SkillToSlot;
     public int evolution;
     public Packet(String player,DERPData.DATPostion pos, String derpName, String derpLayer,int evolution){
         type=PacketType.UnlockingSkill;
@@ -54,6 +54,21 @@ public class Packet implements Serializable {
         if(!selecting)type=PacketType.Sync;
 
     }
+    public Packet(DAT dat, String layer, String DerpID, String playerName ,int Index){
+        type=PacketType.SkillSlotted;
+        SkillToSlot=dat;
+        serverPlayer=playerName;
+        str=layer;
+        derpPacket=DerpID;
+        SlottableIndex=Index;
+    }
+    public Packet(DAT dat, String layer, String DerpID, String playerName){
+        type=PacketType.SlotTriggered;
+        SkillToSlot=dat;
+        serverPlayer=playerName;
+        str=layer;
+        derpPacket=DerpID;
+    }
 
     public enum PacketType{
         Sync,
@@ -61,7 +76,9 @@ public class Packet implements Serializable {
         Message,
         Derp,
         SelectingDerp,
-        UnlockingSkill
+        UnlockingSkill,
+        SkillSlotted,
+        SlotTriggered
     }
     public byte[] SerializeToByteArray() {
         try {

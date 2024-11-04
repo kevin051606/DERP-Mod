@@ -1,25 +1,20 @@
 package net.azazelzero.derp.core.event;
 
+import com.google.gson.JsonObject;
 import net.azazelzero.derp.DerpEventHandler;
-import net.azazelzero.derp.Main;
 import net.azazelzero.derp.core.commands.DerpSelectCommand;
 import net.azazelzero.derp.core.derp.DERP;
+import net.azazelzero.derp.core.derp.skillactions.SkillAction;
 import net.azazelzero.derp.reader.DatapackDerpsLoader;
-import net.azazelzero.derp.core.data.DerpPlayerData;
-import net.azazelzero.derp.core.data.DerpPlayerDataProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(modid = net.azazelzero.derp.Main.MODID,bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModForgeEvents {
@@ -34,39 +29,21 @@ public class ModForgeEvents {
     @SubscribeEvent
     public static void addReloadListener(AddReloadListenerEvent event){
         System.out.println("info +: ");
-//        event.addListener(new DatapackScriptsLoader(event));
+//        event.addListener(new DatapackScriptsLoader(event));\
+        ModForgeEvents.derpsLoaded.clear();
         event.addListener(new DatapackDerpsLoader(event));
     }
-    @SubscribeEvent
-    public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event){
-        if(event.getObject() instanceof Player)
-        {
-            if(!event.getObject().getCapability(DerpPlayerDataProvider.DERP_DATA).isPresent()) {
-                event.addCapability(new ResourceLocation(Main.MODID, "properties"), new DerpPlayerDataProvider());
-            }
 
+    public static AtomicInteger Tick=new AtomicInteger();
+    @SubscribeEvent
+    public static  void worldTickEvent(TickEvent.ServerTickEvent event){
+        if (Tick.get()>18){
+            DerpEventHandler.Cooldown.forEach(DerpEventHandler.CoolDown::decrement);
+            DerpEventHandler.Cooldown.forEach(val->System.out.println("ticking: "+val.Cooldown));
+            Tick.set(0);
         }
+        Tick.getAndIncrement();
     }
-    @SubscribeEvent
-    public static void onPlayerCloned(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().getCapability(DerpPlayerDataProvider.DERP_DATA).ifPresent(oldStore -> {
-                event.getOriginal().getCapability(DerpPlayerDataProvider.DERP_DATA).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
-            });
-        }
-    }
-    @SubscribeEvent
-    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(DerpPlayerData.class);
-    }
-
-
-//    @SubscribeEvent
-//    public static  void worldTickEvent(TickEvent.WorldTickEvent event){
-//
-//    }
 
 //    public static Supplier<IForgeRegistry<RequirementRegistryEntry>> RequirementRegistry;
 //    @SubscribeEvent
@@ -78,6 +55,7 @@ public class ModForgeEvents {
 ////        private static final DeferredRegister<RequirementRegistryEntry> ffff = DeferredRegister.create(ForgeRegistries.BLOCKS);
 ////        RequirementRegistry.
 //    }
+
     @SubscribeEvent
     public static void registerCommandsEvent(RegisterCommandsEvent event){
         new DerpSelectCommand(event.getDispatcher());
@@ -85,11 +63,18 @@ public class ModForgeEvents {
 
     @SubscribeEvent
     public static void livingHurtEvent(LivingHurtEvent event){
-        DerpEventHandler.Slottables.forEach((k,v)->{
-            if(Objects.equals(k,"LivingHurt")){
+        if (!DerpEventHandler.Slottables.containsKey("LivingHurt")) DerpEventHandler.Slottables.put("LivingHurt",new ArrayList<>());
+        JsonObject eventInfo= new JsonObject();
+        eventInfo.addProperty("EventType","LivingHurt");
+        eventInfo.addProperty("AmountOfDamageDealt",event.getAmount());
+        if(event.getSource().getEntity()!=null) eventInfo.addProperty("SourceUUID",event.getSource().getEntity().getUUID().toString());
 
-            }
+//        if(event.getSource().getEntity()!=null) eventInfo.addProperty("SourceUUID",event.getSource().);
+        DerpEventHandler.Slottables.get("LivingHurt").forEach((slottable)->{
+            slottable.call(eventInfo);
         });
     }
+
+
 
 }

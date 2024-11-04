@@ -1,12 +1,18 @@
 package net.azazelzero.derp.core.derp.requirements;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import net.azazelzero.derp.core.net.SerializableResourceLocation;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
+import org.openjdk.nashorn.internal.parser.JSONParser;
 
-public abstract class RequirementRegistryEntry  implements IForgeRegistryEntry<RequirementRegistryEntry> {
+import java.io.Serializable;
+
+public class RequirementRegistryEntry  implements IForgeRegistryEntry<RequirementRegistryEntry> {
     private ResourceLocation registryName = null;
 
 
@@ -34,25 +40,20 @@ public abstract class RequirementRegistryEntry  implements IForgeRegistryEntry<R
     {
         return GameData.checkPrefix(name, true);
     }
-//    public boolean check(boolean invert){
-//        return !invert;
-//    }
+    public DatRequirement datRequirement;
+    public DatRequirement DatFunction(){
+        if (datRequirement!=null) {
+            try {
+                return datRequirement.getClass().newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                return new Requirements.Statistics();
+            }
+        }
+        return new Requirements.Statistics();
+    };
 
-    //    String name;
-//    DatRequirement(String nameHere);
-//    String NAME = null;
-    public JsonObject Parameters;
-    public void setParameters(JsonObject fieldsAndKeys){
-        this.Parameters=fieldsAndKeys;
+    public RequirementRegistryEntry(DatRequirement datRequirement){
+        this.datRequirement=datRequirement;
     }
-
-    public abstract boolean check(String playerName);
-//    public static DatRequirement giveEntry(String name){
-//        NAME=name;
-//        return this;
-//    }
-//    DatRequirement setEntry(){}
-
-
 
 }

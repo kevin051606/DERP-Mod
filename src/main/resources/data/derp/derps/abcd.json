@@ -1,33 +1,64 @@
 {
     "Type":"Derp",
-    "scode":"Global.tellPlayer(\"Dev\",\"wow\")",
-    "Id":"ssss",
+    "Id":"ssffs",
     "DisplayName":"",
     "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions",
-    "Layer":"layer name",
-    "UiBackground":"textures/block/stone.png",
+    "Layer":"Defaults",
+    "UiBackground":"textures/block/cobblestone.png",
     "UiColor":[0.6,0.4,0.5,1],
     "FontColor":[0.3,0.2,0.25,1],
-    "Skills":[ 
+    "SkillUnlockedColor":[0.6,0.4,0.5,1],
+    "SkillLockedColor":[0.3,0.2,0.25,1],
+    "Skills":[
         {
             "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions displaying a monkey ass description for me to read wait did i ever iplement descriptions",
             "Panel":0,
-            "X":0,
+            "X":1,
+
             "Y":0,
+            "Id": "fpaintwo",
             "SkillActions":[],
-            "Requirements":[]
+            "Requirements":[
+                {
+                    "RequirementType": "derp:statistics",
+                    "value": 40,
+                    "name": "jump",
+                    "displayName": "jumps"
+                }
+            ]
         },
         {
             "Panel":0,
             "X":4,
             "Y":1,
-            "SkillActions":[],
-            "Requirements":[]
+            "Id": "ffpain",
+            "Icon": "textures/item/stick.png",
+            "Slottable": true,
+            "Cooldown": 15,
+            "SlottableEvent": "LivingHurt",
+            "SkillActions":[
+                {
+                    "SkillType": "derp:scale",
+                    "scale_type": "motion",
+                    "operation":"add",
+                    "value": 0.2
+                }
+            ],
+            "Requirements":[
+                {
+                    "RequirementType": "derp:statistics",
+                    "value": 10,
+                    "example": "sss",
+                    "name": "jump",
+                    "displayName": "jumps"
+                }
+            ]
         },
         {
             "Panel":0,
             "X":0,
             "Y":5,
+            "Id": "sspain",
             "SkillActions":[],
             "Requirements":[]
         }
