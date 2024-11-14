@@ -5,7 +5,6 @@ import net.azazelzero.derp.core.data.DerpPlayerData;
 import net.azazelzero.derp.core.derp.requirements.DatRequirementRegistry;
 import net.azazelzero.derp.core.derp.skillactions.SkillActionRegistry;
 import net.azazelzero.derp.core.event.Capabilities;
-import net.azazelzero.derp.core.event.ModEvents;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,6 +30,7 @@ public class Main
         eventBus.addListener(this::setup);
 
         eventBus.addListener(this::onRegisterCapabilities);
+
 //        eventBus.addListener(this::setup);
 
 //        ModEvents.setup();

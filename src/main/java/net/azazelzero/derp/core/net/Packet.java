@@ -43,6 +43,7 @@ public class Packet implements Serializable {
         syncSlottable=slots;
         Derps=derps;
     }
+
     public Packet(ArrayList<DERPData[]> derps, String playerName){
         type=PacketType.SelectingDerp;
         serverPlayer=playerName;
@@ -52,6 +53,12 @@ public class Packet implements Serializable {
         derpSync=derps;
         type=PacketType.SelectingDerp;
         if(!selecting)type=PacketType.Sync;
+
+    }
+    public Packet(Map<String, Map<String, DERP>> derps, String serverPlayer){
+        derpSync=derps;
+        type=PacketType.SelectingDerp;
+        this.serverPlayer=serverPlayer;
 
     }
     public Packet(DAT dat, String layer, String DerpID, String playerName ,int Index){
@@ -69,6 +76,9 @@ public class Packet implements Serializable {
         str=layer;
         derpPacket=DerpID;
     }
+    public Packet(PacketType packetType){
+        type=packetType;
+    }
 
     public enum PacketType{
         Sync,
@@ -78,6 +88,7 @@ public class Packet implements Serializable {
         SelectingDerp,
         UnlockingSkill,
         SkillSlotted,
+        OpenEditor,
         SlotTriggered
     }
     public byte[] SerializeToByteArray() {

@@ -1,8 +1,10 @@
 package net.azazelzero.derp.core.net;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.azazelzero.derp.client.event.ClientForgeEvents;
+import net.azazelzero.derp.client.gui.SkillTreeEditor;
+import net.azazelzero.derp.client.gui.utils.PopUpMenuManager;
 import net.azazelzero.derp.core.derp.*;
-import net.azazelzero.derp.core.derp.requirements.DatRequirementRegistry;
 import net.azazelzero.derp.core.event.ModForgeEvents;
 import net.minecraftforge.api.distmarker.Dist;
 
@@ -60,9 +62,28 @@ public class Message {
                     case Sync ->handleSync(msg);
                     case UnlockingSkill -> unlockSkill(msg);
                     case SlotTriggered -> slotTriggered(msg);
+                    case OpenEditor -> editorScreen();
                 }
             }
         };
+    }
+
+    private static void editorScreen() {
+        List<Integer> pain = new ArrayList<>();
+        PoseStack painB = new PoseStack();
+        pain.add(0); //derp index for all derps
+        pain.add(0); //evolution tab
+        pain.add(0); //panel index
+        pain.add(0); //lock scroll 0 is false 1 true
+        pain.add(0); //scrolling number
+        pain.add(-1); //hovering element x / can be used for drag
+        pain.add(-1); //hovering element y / can be used for drag
+        pain.add(1); //allow hovering menu
+        pain.add(1); //texture phase
+        pain.add(0); // derp scroll bar
+        pain.add(0); // pop up menu toggle
+        pain.add(0); // moue button being held
+        Minecraft.getInstance().setScreen(new SkillTreeEditor(pain,painB, new PopUpMenuManager()));
     }
 
     private static void slotTriggered(Packet msg) {
@@ -75,28 +96,25 @@ public class Message {
 
 
     public static void unlockSkill(Packet msg) {
-        System.out.println("wait they dont love you like i love you");
         AtomicInteger counter=new AtomicInteger();
         AtomicInteger scounter=new AtomicInteger();
 
         ClientForgeEvents.ClientPlayerData.forEach((v)->{
 
-            System.out.println(v[msg.evolution].name+" "+msg.derpPacket);
+
             if(Objects.equals(v[msg.evolution].name, msg.derpPacket)){
                 v[msg.evolution].DATs[msg.Pos.Panel][msg.Pos.X][msg.Pos.Y].unlocked=true;
-                System.out.println(v[msg.evolution].DATs[msg.Pos.Panel][msg.Pos.X][msg.Pos.Y].Id);
                 scounter.set(counter.get());
             }
             counter.getAndIncrement();
         });
-        System.out.println(ClientForgeEvents.ClientPlayerData.get(scounter.get())[msg.evolution].DATs[msg.Pos.Panel][msg.Pos.X][msg.Pos.Y].unlocked);
     }
 
     public static void handleSync(Packet msg) {
         if (ClientForgeEvents.ClientPlayerData == null) ClientForgeEvents.ClientPlayerData = new ArrayList<>();
         ClientForgeEvents.ClientPlayerData.clear();
         for (DERPData[] derp : msg.Derps) {
-            DERP[] derpSetToBeAdded = new DERP[3];
+            DERP[] derpSetToBeAdded = new DERP[4];
             for (int i = 0; i < derp.length; i++) {
                 DERPData derpData=derp[i];
                 if(derpData==null) continue;
@@ -121,15 +139,12 @@ public class Message {
             for (DAT[] X : Panel) {
                 if (X == null) continue;
                 for (DAT dat : X) {
-                    System.out.println("val");
                     if (dat==null) continue;
-                    System.out.println(dat.Id);
                     datMap.put(dat.Id, dat);
                 }
             }
         }
         for (String s : data.SkillsUnlocked) {
-            System.out.println("sss: "+s);
             if (datMap.containsKey(s)) datMap.get(s).unlocked=true;
         }
     }

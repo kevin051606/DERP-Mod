@@ -101,6 +101,7 @@ public class SelectDerp extends Screen {
         int i = (this.width - 132) / 2;
         int j = (this.height - 185) / 2;
         System.out.println("kill me");
+        ClientForgeEvents.Slots.clear();
         this.addWidget(new Button((i-23),(j+75) ,13, 19, new TextComponent("ssddfd"), (b) -> {
             this.derpIndex = (Integer)this.variableCarryOver.get(0);
             this.variableCarryOver.set(0, (Integer)this.variableCarryOver.get(0) + 1);
@@ -125,7 +126,7 @@ public class SelectDerp extends Screen {
         this.addWidget(new Button(i+22,j+180, 257-168, 13, new TextComponent("ssddfd"), (b) -> {
             this.currentLayer=variableCarryOver.get(1);
             derpIndex=variableCarryOver.get(0);
-            DERP[] newDerpSet=new DERP[3];
+            DERP[] newDerpSet=new DERP[4];
             newDerpSet[0]=derp();
             ClientForgeEvents.ClientPlayerData.add(newDerpSet);
             currentLayer++;
@@ -142,6 +143,7 @@ public class SelectDerp extends Screen {
 
                     }
                 PacketHandler.INSTANCE.sendToServer(new ClientMessage(new Packet(derpData, Minecraft.getInstance().player.getName().getString())));
+                derpData.forEach(z->System.out.println("pain 2.0: "+z[0].derpId));
                 onClose();
             }
             else {

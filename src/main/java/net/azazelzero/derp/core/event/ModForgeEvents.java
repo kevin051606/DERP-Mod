@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ModForgeEvents {
 
     public final static Map<String, Map<String, DERP>> derpsLoaded = new HashMap<>();
+    public final static List<DERP> derpsLoadedList = new ArrayList<>();
     public final static List<String> layers = new ArrayList<>();
 
 //    public final static Map<String, SkillTreeObject> scriptsLoaded = new HashMap<>();

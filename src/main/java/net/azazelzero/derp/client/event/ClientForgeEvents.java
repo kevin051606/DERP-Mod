@@ -55,6 +55,7 @@ public class ClientForgeEvents {
             pain.add(-1); //hovering element y / can be used for drag
             pain.add(1); //allow hovering menu
             pain.add(1); //texture phase
+            pain.add(0); // derp scroll bar
             Minecraft.getInstance().setScreen(new SkillTree(pain,new PoseStack()));
         }
 

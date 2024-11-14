@@ -3,23 +3,28 @@ package net.azazelzero.derp.core.derp.skillactions;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.azazelzero.derp.Main;
+import net.azazelzero.derp.client.gui.utils.Field;
 import net.minecraft.commands.Commands;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import virtuoel.pehkui.Pehkui;
 import virtuoel.pehkui.api.ScaleData;
-import virtuoel.pehkui.api.ScaleOperations;
 import virtuoel.pehkui.api.ScaleRegistries;
 import virtuoel.pehkui.api.ScaleType;
-import virtuoel.pehkui.command.argument.ScaleOperationArgumentType;
-import virtuoel.pehkui.command.argument.ScaleTypeArgumentType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SkillActions {
     public static final RegistryObject<SkillActionEntry>  command = SkillActionRegistry.SKILL_ACTIONS.register("command",() -> new SkillActionEntry(new SkillActions.command()));
     public static final RegistryObject<SkillActionEntry>  scale = SkillActionRegistry.SKILL_ACTIONS.register("scale",() -> new SkillActionEntry(new SkillActions.scale()));
     public static class command extends SkillAction {
-
+        public List<Field> getFields(){
+            ArrayList<Field> l = new ArrayList<Field>();
+            l.add(new Field("command",""));
+            return l;
+        };
         @Override
         public void action(String playerName) {
             JsonObject Parameters = getParameters();
@@ -38,7 +43,13 @@ public class SkillActions {
         public void onRemove(String playerName) {}
     }
     public static class scale extends SkillAction{
-
+        public List<Field> getFields(){
+            ArrayList<Field> l = new ArrayList<Field>();
+            l.add(new Field("value",""));
+            l.add(new Field("scale_type",""));
+            l.add(new Field("operation",""));
+            return l;
+        };
         @Override
         public void action(String playerName) {
 
@@ -66,6 +77,10 @@ public class SkillActions {
         public void action(String playerName) {
 
         }
+        public List<Field> getFields(){
+            ArrayList<Field> l = new ArrayList<Field>();
+            return l;
+        };
 
         @Override
         public void onRemove(String playerName) {

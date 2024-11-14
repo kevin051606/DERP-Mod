@@ -18,15 +18,17 @@ import static net.minecraft.client.gui.GuiComponent.blit;
 
 public class SlottableCooldown implements IIngameOverlay {
     private static final ResourceLocation WINDOW_TEXTURE = new ResourceLocation("derp","ui/skillsmenu.png");
+    public float scaleConstant = 0.8f;
     @Override
     public void render(ForgeIngameGui gui, PoseStack poseStack, float partialTick, int width, int height) {
+        poseStack.scale(scaleConstant,scaleConstant,scaleConstant);
         RenderSystem.setShaderColor(1f,1f,1f,1f);
             RenderSystem.setShaderColor(1f,1f,1f,1f);
             GuiUtils.drawContinuousTexturedBox(
                     poseStack,
                     WINDOW_TEXTURE,
-                    width-120,
-                    height-29,
+                    scaled(width-120),
+                    scaled(height-26),
                     0,
                     171, 8,
                     12, 256,
@@ -38,8 +40,9 @@ public class SlottableCooldown implements IIngameOverlay {
                 if (i>4) continue;
                 DAT slot=ClientForgeEvents.SlottedSkills[i];
                 if (slot==null)continue;
-                renderSkillDrag(poseStack,(width-115)+(i*22),height-24,slot);
+                renderSkillDrag(poseStack,scaled((width-116))+(i*22),scaled(height-22),slot);
             }
+            poseStack.scale(1/scaleConstant,1/scaleConstant,1/scaleConstant);
     }
     public void renderSkillDrag(PoseStack matrices, int x, int y, DAT dat) {
         if(dat==null) return;
@@ -79,5 +82,9 @@ public class SlottableCooldown implements IIngameOverlay {
         RenderSystem.setShaderColor(clrAdd,clrAdd, clrAdd,1f);
         RenderSystem.setShaderTexture(0,new ResourceLocation(dat.Icon));
         blit(matrices,x+1,y+1, 0,0f,0f,pixels.get(),16,16,16);
+    }
+
+    public int scaled(float num){
+        return (int) (num*(1/scaleConstant));
     }
 }

@@ -122,7 +122,7 @@ public class SelectDerp extends Screen {
         this.addWidget(new Button(168 ,207, 257-168, 13, new TextComponent("ssddfd"), (b) -> {
             this.currentLayer=variableCarryOver.get(1);
             derpIndex=variableCarryOver.get(0);
-            DERP[] newDerpSet=new DERP[3];
+            DERP[] newDerpSet=new DERP[4];
             newDerpSet[0]=derp[derpIndex];
             ClientForgeEvents.ClientPlayerData.add(newDerpSet);
             currentLayer++;

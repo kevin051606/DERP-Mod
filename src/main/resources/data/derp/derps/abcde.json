@@ -1,11 +1,12 @@
 {
     "Type":"Derp",
-    "Id":"ssffs",
+    "Id":"ssffejs",
     "DisplayName":"",
     "Description":"displaying a monkey ass description for me to read wait did i ever iplement descriptions",
-    "Layer":"Defaults",
-    "UiBackground":"textures/block/cobblestone.png",
-    "UiColor":[0.6,0.4,0.5,1],
+    "Layer":"Default",
+    "Icon": "textures/item/stick.png",
+    "UiBackground":"textures/block/dirt.png",
+    "UiColor":[0.6,0.4,0.7,1],
     "FontColor":[0.3,0.2,0.25,1],
     "SkillUnlockedColor":[0.6,0.4,0.5,1],
     "SkillLockedColor":[0.3,0.2,0.25,1],
@@ -72,6 +73,32 @@
             "Y":5,
             "Id": "sspain",
             "SkillActions":[],
+            "Requirements":[]
+        },
+        {
+            "Panel":2,
+            "X":2,
+            "Y":5,
+            "Id": "panelthree",
+            "SkillActions":[],
+            "Requirements":[]
+        },
+        {
+            "Panel":3,
+            "X":2,
+            "Y":5,
+            "Icon": "textures/item/diamond.png",
+            "Id": "panelfoir",
+            "SkillActions":[
+                {
+                    "SkillType":"derp:command",
+                    "command":"execute as {playername} at @s run fill ~-5 ~-5 ~-5 ~5 ~5 ~5 minecraft:iron_ore replace minecraft:grass"
+                },
+                {
+                    "SkillType":"derp:command",
+                    "command":"execute as {playername} at @s run fill ~-5 ~-5 ~-5 ~5 ~5 ~5 minecraft:diamond_ore replace #minecraft:dirt"
+                }
+            ],
             "Requirements":[]
         }
     ]

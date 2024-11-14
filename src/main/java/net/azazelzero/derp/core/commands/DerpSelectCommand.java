@@ -26,7 +26,11 @@ import java.util.HashMap;
 
 public class DerpSelectCommand {
     public DerpSelectCommand(CommandDispatcher<CommandSourceStack> dispatcher){
-        dispatcher.register(Commands.literal("derp").requires((as)->{return  as.hasPermission(2);}).then(Commands.literal("select").then(Commands.argument("target", EntityArgument.players()).executes((command) -> {
+        dispatcher.register(Commands.literal("derp").requires((as)->{return  as.hasPermission(2);}).then(Commands.literal("editor").then(Commands.argument("target", EntityArgument.players()).executes((command)->{
+            sendEditorPacket(command);
+            return 0;
+        })))
+        .then(Commands.literal("select").then(Commands.argument("target", EntityArgument.players()).executes((command) -> {
             sendGuiPacket(command);
             return 0;
         }))));
@@ -38,28 +42,21 @@ public class DerpSelectCommand {
             net.azazelzero.derp.core.derp.DERP nullDerp=new DERP();
             nullDerp.Layer="null";
             nullDerpMap.put("null", nullDerp);
-            if (ModForgeEvents.derpsLoaded.size()<1) ModForgeEvents.derpsLoaded.put("Default",nullDerpMap);
-
-            serverPlayer.getCapability(DerpPlayerDataProvider.DERP_DATA).ifPresent(b -> {
-                b.derps.forEach((v)->{
-                    for (DERPData derpData : v) {
-                        if (derpData==null) continue;
-                        for (DAT[][] dat : ModForgeEvents.derpsLoaded.get(derpData.layerId).get(derpData.derpId).DATs) {
-                            for (DAT[] dats : dat) {
-                                for (DAT dat1 : dats) {
-                                    if (dat1==null) continue;
-                                    for (SkillAction action : dat1.Actions) {
-                                        if (action==null) continue;
-                                        action.onRemove(serverPlayer.getName().getString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                b = new DerpPlayerData();
-            });
+            if (ModForgeEvents.derpsLoaded.size()<1) ModForgeEvents.derpsLoaded.put(nullDerp.Layer,nullDerpMap);
+            DERP.remove(serverPlayer);
             PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),new MapMessage(new Packet(ModForgeEvents.derpsLoaded,true)));
+        }
+    }
+    public void sendEditorPacket(CommandContext<CommandSourceStack> command) throws CommandSyntaxException {
+        for (ServerPlayer serverPlayer : EntityArgument.getPlayers(command, "target")){
+            System.out.println(serverPlayer.getName().getString());
+            HashMap<String, net.azazelzero.derp.core.derp.DERP> nullDerpMap = new HashMap<String, net.azazelzero.derp.core.derp.DERP>();
+            net.azazelzero.derp.core.derp.DERP nullDerp=new DERP();
+            nullDerp.Layer="null";
+            nullDerpMap.put("null", nullDerp);
+            if (ModForgeEvents.derpsLoaded.size()<1) ModForgeEvents.derpsLoaded.put("Default",nullDerpMap);
+            PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),new MapMessage(new Packet(ModForgeEvents.derpsLoaded,false)));
+            PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),new Message(new Packet(Packet.PacketType.OpenEditor)));
         }
     }
     private void test(ServerPlayer s){

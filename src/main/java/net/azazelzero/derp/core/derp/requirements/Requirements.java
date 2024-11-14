@@ -1,6 +1,7 @@
 package net.azazelzero.derp.core.derp.requirements;
 
 import com.google.gson.JsonObject;
+import net.azazelzero.derp.client.gui.utils.Field;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
@@ -8,8 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import org.luaj.vm2.ast.Str;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -78,6 +80,13 @@ public class Requirements{
     public void init() {
         Objects.requireNonNull(Minecraft.getInstance().getConnection()).send(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.REQUEST_STATS));
     }
+    public List<Field> getFields(){
+        ArrayList<Field> l = new ArrayList<Field>();
+        l.add(new Field("value",""));
+        l.add(new Field("name",""));
+        l.add(new Field("displayName",""));
+        return l;
+    };
 
     @Override
     public String[] DescriptionString(String playerName) {

@@ -21,6 +21,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -74,9 +75,9 @@ public class ClientMessage {
                     if (!Dat.Slottable) break;
                     if (Objects.equals(Dat.Icon, "nulled")){
                         System.out.println("yuo");
-                        System.out.println(DerpEventHandler.PlayerSlottables.get(Dat.SlottableEvent)[msg.SlottableIndex].EventName);
+                        System.out.println(DerpEventHandler.PlayerSlottables.get(msg.serverPlayer)[msg.SlottableIndex].EventName);
                         System.out.println(DerpEventHandler.Slottables.get(Dat.SlottableEvent).size());
-                        DerpEventHandler.PlayerSlottables.get(Dat.SlottableEvent)[msg.SlottableIndex]=null;
+                        DerpEventHandler.PlayerSlottables.get(msg.serverPlayer)[msg.SlottableIndex]=null;
                         DerpEventHandler.Slottables.get(Dat.SlottableEvent).removeIf(value -> Objects.equals(value.SkillPosition.SkillID, Dat.Id));
                         System.out.println(DerpEventHandler.Slottables.get(Dat.SlottableEvent).size());
                         break;
@@ -90,8 +91,15 @@ public class ClientMessage {
                             Dat.Actions,
                             Dat.Cooldown
                             );
-                    if (!DerpEventHandler.PlayerSlottables.containsKey(msg.SkillToSlot.SlottableEvent)) DerpEventHandler.PlayerSlottables.put(msg.SkillToSlot.SlottableEvent, new Slottable[5]);
-                    DerpEventHandler.PlayerSlottables.get(msg.SkillToSlot.SlottableEvent)[msg.SlottableIndex]=slot;
+
+                    if (!DerpEventHandler.PlayerSlottables.containsKey(msg.serverPlayer)) DerpEventHandler.PlayerSlottables.put(msg.serverPlayer, new Slottable[5]);
+                    boolean duplicates=Arrays.stream(DerpEventHandler.PlayerSlottables.get(msg.serverPlayer)).anyMatch(b -> {
+                        if (b==null) return false;
+                        return (Objects.equals(b.SkillPosition.SkillID, slot.SkillPosition.SkillID)) &&
+                                (Objects.equals(b.SkillPosition.DerpID, slot.SkillPosition.SkillID));
+                    });
+                    if (duplicates) break;
+                    DerpEventHandler.PlayerSlottables.get(msg.serverPlayer)[msg.SlottableIndex]=slot;
                     if (!DerpEventHandler.Slottables.containsKey(slot.EventName)) DerpEventHandler.Slottables.put(slot.EventName, new ArrayList<>());
                     DerpEventHandler.Slottables.get(slot.EventName).add(slot);
                     System.out.println("Cooldown: "+slot.CoolDown);
@@ -108,20 +116,20 @@ public class ClientMessage {
                     });
                     for (int i = 0; i < msg.Derps.size(); i++) {
                         DERPData[] e=msg.Derps.get(i);
+                        System.out.println("derp ID: "+e[0].derpId);
                         for (DAT[][] dat : ModForgeEvents.derpsLoaded.get(e[0].layerId).get(e[0].derpId).DATs) {
                             for (DAT[] dats : dat) {
-                                for (DAT[] dats1 : dat) {
-                                    for (DAT dat1 : dats1) {
-                                        if (dat1==null)continue;
-                                        if (dat1.Requirements.length>0)continue;
-                                        int finalI = i;
-                                        playerS.getCapability(DerpPlayerDataProvider.DERP_DATA).ifPresent(derpPlayerData -> unlocker(derpPlayerData, finalI,dat1.Id));
-                                        PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerS), new Message(new Packet(msg.serverPlayer,new DERPData.DATPostion(dat1.Panel,dat1.X,dat1.Y),e[0].derpId,e[0].layerId,0)));
-                                        for (SkillAction action : dat1.Actions) {
-                                            action.action(msg.serverPlayer);
-                                        }
+                                for (DAT dat1 : dats) {
+                                    if (dat1==null)continue;
+                                    if (dat1.Requirements.length>0)continue;
+                                    int finalI = i;
+                                    playerS.getCapability(DerpPlayerDataProvider.DERP_DATA).ifPresent(derpPlayerData -> unlocker(derpPlayerData, finalI,dat1.Id));
+                                    PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerS), new Message(new Packet(msg.serverPlayer,new DERPData.DATPostion(dat1.Panel,dat1.X,dat1.Y),e[0].derpId,e[0].layerId,0)));
+                                    for (SkillAction action : dat1.Actions) {
+                                        action.action(msg.serverPlayer);
                                     }
                                 }
+
                             }
                         }
                     }

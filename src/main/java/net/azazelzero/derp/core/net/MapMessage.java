@@ -106,13 +106,13 @@ public class MapMessage {
     public static DistExecutor.SafeRunnable handlePacket(Packet msg, Supplier<NetworkEvent.Context> ctx) {
         return new DistExecutor.SafeRunnable() {
             public void run() {
-
-                ClientForgeEvents.ClientPlayerData.clear();
                 if(msg.type!= Packet.PacketType.SelectingDerp) return;
                 DeferredRegister.create(new ResourceLocation("derp", "skillactions"),"derp").getEntries().forEach(b->{
                     SkillActionEntry val = (SkillActionEntry) b.get();
                     val.skillAction().onRemove(Minecraft.getInstance().player.getName().getString());
                 });
+                ClientForgeEvents.ClientPlayerData.clear();
+
                 List<Integer> pain = new ArrayList<>();
                 pain.add(0);
                 pain.add(0);

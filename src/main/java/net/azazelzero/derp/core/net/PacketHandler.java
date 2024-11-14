@@ -41,6 +41,11 @@ public final class PacketHandler {
                 .decoder(MapMessage::new)
                 .consumer(MapMessage::handle)
                 .add();
+        INSTANCE.messageBuilder(MapMessageUpload.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(MapMessageUpload::encode)
+                .decoder(MapMessageUpload::new)
+                .consumer(MapMessageUpload::handle)
+                .add();
 
     }
 }
